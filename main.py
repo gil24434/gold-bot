@@ -3,23 +3,20 @@ import schedule
 import time
 from supabase import create_client, Client
 import telebot
-from keep_alive import keep_alive  # برای روشن موندن Replit
+from keep_alive import keep_alive
 
 # اتصال به Supabase
 url = "https://djioxuobvlbqajzlcdmr.supabase.co"
-key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRqaW94dW9idmxicWFqemxjZG1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4ODU0NDUsImV4cCI6MjA1OTQ2MTQ0NX0.5WTffVeX8FqrypHuBv0_-GNthwSqDtvK3koscTOqglc"
+key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 supabase: Client = create_client(url, key)
 
-# اطلاعات ربات تلگرام
-telegram_token = "8107734105:AAE-W8DAkBTA1AIYmW2nhW6SakcILnsy0LQ"
+# ربات تلگرام
+bot = telebot.TeleBot("توکن ربات", parse_mode="HTML")
 chat_id = 6892568530
-
-bot = telebot.TeleBot(telegram_token, parse_mode="HTML")
 
 # فعال کردن سرور Flask
 keep_alive()
 
-# دریافت قیمت از نوسان
 def get_gold_price():
     try:
         response = requests.get(
@@ -34,7 +31,6 @@ def get_gold_price():
         print("❌ خطا در دریافت قیمت:", e)
         return None
 
-# ذخیره در دیتابیس و ارسال به تلگرام
 def save_price():
     print("⏳ دریافت قیمت...")
     price = get_gold_price()
@@ -50,13 +46,14 @@ def save_price():
     else:
         print("⚠️ قیمت دریافت نشد.")
 
-# ⏱ زمان‌بندی: هر ۱۰ دقیقه
+# زمان‌بندی
 schedule.every(10).minutes.do(save_price)
 
-# اجرای تست اولیه
-print("🚀 تست اولیه...")
+# اجرای اولیه
+print("🚀 اجرای اولیه...")
 save_price()
 
+# حلقه همیشگی
 print("⏳ منتظر اجرای خودکار هر ۱۰ دقیقه...")
 while True:
     schedule.run_pending()
