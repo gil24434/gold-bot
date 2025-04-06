@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: gold-bot
+    env: python
+    buildCommand: ""
+    startCommand: python main.py
+    plan: free
+    envVars:
+      - key: PORT
+        value: 10000
